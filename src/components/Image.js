@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {View, Image} from 'react-native';
-import {TapGestureHandler} from 'react-native-gesture-handler';
+import {
+  TapGestureHandler,
+  LongPressGestureHandler,
+} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/Feather';
 import url from '../config';
 
 export default class ImageItem extends Component {
@@ -10,35 +14,53 @@ export default class ImageItem extends Component {
       selectImage(id);
     }
   };
+
+  handleLongPress = ({nativeEvent}) => {
+    if (nativeEvent.state === 4) {
+      const {id, selectModeToggle} = this.props;
+      selectModeToggle(id);
+    }
+  };
+
   render() {
-    const {smallUrl, OriginalUrl, id, isSelect} = this.props;
+    const {
+      smallUrl,
+      OriginalUrl,
+      id,
+      isSelect,
+      isColumnView,
+      selectModeToggle,
+    } = this.props;
     return (
-      <View style={{width: '40%', height: 100}}>
+      <View
+        style={{
+          width: isColumnView ? '90%' : '40%',
+          height: isColumnView ? 300 : 200,
+        }}>
         {isSelect && (
-          <View
-            style={{
-              width: 25,
-              height: 25,
-              backgroundColor: 'blue',
-              borderRadius: 50,
-              position: 'absolute',
-              zIndex: 2,
-            }}></View>
-        )}
-        <TapGestureHandler
-          onHandlerStateChange={this.handlePress}
-          style={{flex: 1}}>
-          <Image
-            source={{uri: `${url}${smallUrl}`}}
-            style={{
-              flex: 1,
-              resizeMode: 'cover',
-              marginVertical: 10,
-              borderWidth: 2,
-              borderColor: 'black',
-            }}
+          <Icon
+            name="check-circle"
+            size={30}
+            color="rgb(8, 201, 8)"
+            style={{position: 'absolute', zIndex: 2, left: -14}}
           />
-        </TapGestureHandler>
+        )}
+        <LongPressGestureHandler
+          onHandlerStateChange={this.handleLongPress}
+          minDurationMs={300}>
+          <TapGestureHandler
+            onHandlerStateChange={this.handlePress}
+            style={{flex: 1}}>
+            <Image
+              source={{uri: `${url}${smallUrl}`}}
+              style={{
+                flex: 1,
+                resizeMode: 'contain',
+                marginVertical: 10,
+              }}
+            />
+          </TapGestureHandler>
+        </LongPressGestureHandler>
       </View>
     );
   }

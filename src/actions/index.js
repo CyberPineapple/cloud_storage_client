@@ -1,3 +1,3 @@
-import {getImages, uploadImages} from './images';
+import {getImages, uploadImages, downloadImages, deleteImages} from './images';
 
-export default {getImages, uploadImages};
+export default {getImages, uploadImages, downloadImages, deleteImages};
